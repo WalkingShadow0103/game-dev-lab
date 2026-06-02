@@ -31,10 +31,10 @@ float Divide(float a, float b)
 }
 
 // 도전 1. 제곱 연산 추가
-float Power(float base, int exponenet)
+float Power(float base, int exponent)
 {
 	float result = 1.0f;
-	for (int i = 0; i < exponenet; ++i)
+	for (int i = 0; i < exponent; ++i)
 	{
 		result *= base;
 	}
