@@ -2,28 +2,29 @@
 #include <limits>
 #include <sstream>
 #include <string>
+#include <cmath>
 
 #include "Calculator.h"
 
-void PrintMenu();
+void PrintMenu(bool hasPreviousResult, float previousResult);
 void ClearInput();
 float ReadOperand(std::string prompt, bool hasPreviousResult, float previousResult);
 char ReadOperator();
 
-// 도전 2. 이전 결과 저장 기능 추가
-bool hasPR = false;
-float PR = 0.0f;
-
-// 도전 3. 연산 횟수 카운터 추가
-int counter = 0;
-
 int main()
 {
+    // 도전 2. 이전 결과 저장 기능 추가
+    bool hasPR = false;
+    float PR = 0.0f;
+
+    // 도전 3. 연산 횟수 카운터 추가
+    int counter = 0;
+
     bool isRunning = true;
 
     while (isRunning)
     {
-        PrintMenu();
+        PrintMenu(hasPR, PR);
 
         char operation = ReadOperator();
 
@@ -33,6 +34,13 @@ int main()
             isRunning = false;
             continue;
         }
+
+        if (operation != '+' && operation != '-' && operation != '*' && operation != '/' && operation != '^')
+        {
+            std::cout << "Invalid operation. Try again.\n";
+            isRunning = false;
+            continue;
+		}
 
         float firstNumber = ReadOperand("Enter first number: ", hasPR, PR);
         float secondNumber = ReadOperand("Enter second number: ", hasPR, PR);
@@ -96,23 +104,28 @@ int main()
 			// 도전 2. 이전 결과 저장 기능 추가
 			hasPR = true;
             PR = result;
+            counter++;
         }
 
         std::cout << "\n";
 
 		// 도전 3. 연산 횟수 카운터 추가
-        counter++;
 		std::cout << "Count: " << counter << "\n";
     }
 
     return 0;
 }
 
-void PrintMenu()
+void PrintMenu(bool hasPR, float PR)
 {
     std::cout << "=== Calculator V2 ===\n";
     std::cout << "Operations: +, -, *, /, ^\n";
-	std::cout << "Use p to reuse previous result.\n";
+    if (hasPR) {
+        std::cout << "previous result p = " << PR << ".\n";
+    }
+    else {
+        std::cout << "Use p to reuse previous result.\n";
+    }
     std::cout << "Type q to quit.\n";
 }
 
