@@ -1,16 +1,18 @@
 #include <iostream>
 #include <limits>
+#include <sstream>
 #include <string>
 
 #include "Calculator.h"
 
 void PrintMenu();
 void ClearInput();
-float ReadNumber(std::string prompt);
+float ReadOperand(std::string prompt, bool hasPreviousResult, float previousResult);
 char ReadOperator();
 
 // 도전 2. 이전 결과 저장 기능 추가
-float previousResult = 0.0f;
+bool hasPR = false;
+float PR = 0.0f;
 
 // 도전 3. 연산 횟수 카운터 추가
 int counter = 0;
@@ -32,8 +34,8 @@ int main()
             continue;
         }
 
-        float firstNumber = ReadNumber("Enter first number: ");
-        float secondNumber = ReadNumber("Enter second number: ");
+        float firstNumber = ReadOperand("Enter first number: ", hasPR, PR);
+        float secondNumber = ReadOperand("Enter second number: ", hasPR, PR);
 
         float result = 0.0f;
         bool isValidOperation = true;
@@ -71,9 +73,14 @@ int main()
                 std::cout << "Invalid exponent. Must be an integer.\n";
                 isValidOperation = false;
             }
-            else
+            else if (secondNumber < 0)
             {
-                result = Power(firstNumber, exponent);
+                std::cout << "Negative exponent not supported.\n";
+                isValidOperation = false;
+            }
+			else
+            {
+                result = Power(firstNumber, static_cast<int>(secondNumber));
             }
             break;
 
@@ -87,13 +94,15 @@ int main()
         {
             std::cout << "Result: " << result << "\n";
 			// 도전 2. 이전 결과 저장 기능 추가
-			previousResult = result;
+			hasPR = true;
+            PR = result;
         }
 
         std::cout << "\n";
 
 		// 도전 3. 연산 횟수 카운터 추가
         counter++;
+		std::cout << "Count: " << counter << "\n";
     }
 
     return 0;
@@ -102,7 +111,8 @@ int main()
 void PrintMenu()
 {
     std::cout << "=== Calculator V2 ===\n";
-    std::cout << "Operations: +, -, *, /\n";
+    std::cout << "Operations: +, -, *, /, ^\n";
+	std::cout << "Use p to reuse previous result.\n";
     std::cout << "Type q to quit.\n";
 }
 
@@ -112,24 +122,36 @@ void ClearInput()
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 }
 
-float ReadNumber(std::string prompt)
+float ReadOperand(std::string prompt, bool hasPreviousResult, float previousResult)
 {
-    float value = 0.0f;
-
     while (true)
     {
         std::cout << prompt;
-        std::cin >> value;
 
-        if (std::cin.fail())
+        std::string input;
+        std::cin >> input;
+
+        if (input == "p" || input == "P")
         {
-            std::cout << "Invalid number. Try again.\n";
-            ClearInput();
+            if (hasPreviousResult)
+            {
+                return previousResult;
+            }
+
+            std::cout << "No previous result yet. Enter a number.\n";
             continue;
         }
 
-        ClearInput();
-        return value;
+        std::istringstream stream(input);
+        float value = 0.0f;
+        char leftover = '\0';
+
+        if (stream >> value && !(stream >> leftover))
+        {
+            return value;
+        }
+
+        std::cout << "Invalid number. Try again.\n";
     }
 }
 
