@@ -50,15 +50,6 @@ bool Inventory::AddItem(
     const std::string& type
 )
 {
-    // TODO:
-    // 1. name이 비어 있으면 false
-    // 2. quantity <= 0 이면 false
-    // 3. price < 0 이면 false
-    // 4. 같은 이름의 아이템이 있으면 quantity만 증가시키고 true
-    // 5. 새 아이템이면 슬롯이 남아 있는지 검사
-    // 6. 슬롯이 없으면 false
-    // 7. 새 Item을 만들어 m_items에 push_back 후 true
-
     if (name.empty())
     {
         std::cout << "Item name cannot be empty.\n";
@@ -101,17 +92,7 @@ bool Inventory::AddItem(
 
 bool Inventory::UseItem(const std::string& name)
 {
-    // TODO:
-    // 1. FindItemIndexByName으로 검색
-    // 2. 없으면 메시지 출력 후 false
-    // 3. 소비 아이템이 아니면 메시지 출력 후 false
-    // 4. quantity <= 0 이면 메시지 출력 후 false
-    // 5. quantity 1 감소
-    // 6. 사용 성공 메시지 출력
-    // 7. quantity가 0이면 m_items에서 제거
-    // 8. true 반환
-
-	int index = FindItemIndexByName(name);
+    int index = FindItemIndexByName(name);
 
     if (index < 0)
     {
@@ -126,6 +107,12 @@ bool Inventory::UseItem(const std::string& name)
         std::cout << "Item is not consumable: " << name << "\n";
 		return false;
 	}
+
+    if (item.quantity <= 0)
+    {
+        std::cout << "Item quantity is zero: " << item.name << "\n";
+        return false;
+    }
 
 	item.quantity -= 1;
     std::cout << "Used item: " << name << "\n";
@@ -160,11 +147,6 @@ void Inventory::Print() const
 
 bool Inventory::PrintItemByName(const std::string& name) const
 {
-    // TODO:
-    // 1. FindItemIndexByName으로 검색
-    // 2. 없으면 "Item not found." 출력 후 false
-    // 3. 있으면 PrintItem으로 출력 후 true
-
 	int index = FindItemIndexByName(name);
 
     if (index < 0)
@@ -202,10 +184,6 @@ int Inventory::GetMaxSlots() const
 
 int Inventory::FindItemIndexByName(const std::string& name) const
 {
-    // TODO:
-    // 1. m_items 전체 순회
-    // 2. 이름이 같으면 static_cast<int>(i) 반환
-    // 3. 못 찾으면 -1 반환
 
     for (std::size_t i = 0; i < m_items.size(); ++i)
     {
@@ -307,17 +285,18 @@ bool Inventory::PrintMostExpensiveItem() const
         std::cout << "Inventory is empty.\n";
         return false;
     }
-    const Item* mostExpensiveItem = &m_items[0];
-    for (const Item& item : m_items)
+
+    std::size_t mostExpensiveIndex = 0;
+
+    for (std::size_t i = 1; i < m_items.size(); ++i)
     {
-        if (item.price > mostExpensiveItem->price)
+        if (m_items[i].price > m_items[mostExpensiveIndex].price)
         {
-            mostExpensiveItem = &item;
+            mostExpensiveIndex = i;
         }
     }
-    std::cout << "Most expensive item:\n";
 
-	int nameIndex = FindItemIndexByName(mostExpensiveItem->name);
-	PrintItem(*mostExpensiveItem, nameIndex);
-	return true;
+    std::cout << "Most expensive item:\n";
+    PrintItem(m_items[mostExpensiveIndex], mostExpensiveIndex);
+    return true;
 }
