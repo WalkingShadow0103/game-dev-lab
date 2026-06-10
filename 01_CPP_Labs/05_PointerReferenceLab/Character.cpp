@@ -144,6 +144,12 @@ bool HealByPointer(Character* character, int amount)
         return false;
     }
 
+    if (character->IsDead())
+    {
+        std::cout << "[Pointer] Cannot heal dead character. Use revive.\n";
+        return false;
+    }
+
 	character->hp += amount;
 
     if (character->hp > character->maxHp)

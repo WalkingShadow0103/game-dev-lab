@@ -79,6 +79,33 @@ int main()
             break;
         }
 
+        case 6:
+        {
+            Character* lowestHpCharacter = FindLowestHpCharacter(party);
+
+            if (lowestHpCharacter == nullptr)
+            {
+                std::cout << "Party is empty.\n";
+            }
+            else
+            {
+                std::cout << "Lowest HP character:\n";
+                PrintCharacter(*lowestHpCharacter);
+            }
+
+            break;
+        }
+
+        case 7:
+        {
+            std::string name = ReadWord("Target name: ");
+            int reviveHp = ReadInt("Revive HP: ");
+
+            Character* target = FindCharacterByName(party, name);
+            ReviveByPointer(target, reviveHp);
+            break;
+        }
+
         case 0:
         {
             std::cout << "Exit pointer lab.\n";
