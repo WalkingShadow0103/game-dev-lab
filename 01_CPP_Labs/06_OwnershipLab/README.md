@@ -46,3 +46,11 @@ weak_ptr
 lock
 expired
 non-owning pointer
+
+## Q&A
+
+Q1. shared_ptr를 서로 물고 있으면 왜 객체가 안 지워질 수 있는가?
+A1. 소유자에게서 객체를 지운다고 해도 다른 소유자가 있기 때문에.
+
+Q2. weak_ptr는 이 문제를 어떻게 줄이는가?
+A2. 소유하지 않기에 지워지는 건 보장됨.
