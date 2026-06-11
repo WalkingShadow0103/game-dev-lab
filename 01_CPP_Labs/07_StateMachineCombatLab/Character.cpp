@@ -85,7 +85,16 @@ void Character::TakeDamage(int damage)
     m_hp -= damage;
 
     ClampHp();
-    UpdateDeadState();
+
+    if (m_hp <= 0)
+    {
+        m_state = CharacterState::Dead;
+    }
+    else
+    {
+        m_state = CharacterState::Hit;
+    }
+    //UpdateDeadState(); Hit 관련 문제로 일단 주석화
 
     std::cout << m_name << " took " << damage
         << " damage. HP: " << m_hp << "/" << m_maxHp << "\n";

@@ -5,6 +5,9 @@
 
 BattleSystem::BattleSystem()
     : m_characters()
+    , m_turnCount(0)
+    , m_randomEngine(std::random_device{}())
+    , m_criticalRoll(0,99)
 {
 }
 
@@ -82,7 +85,7 @@ BattleResult BattleSystem::Attack(const std::string& attackerName, const std::st
 
     attacker->SetState(CharacterState::Attacking);
 
-    std::cout << "[Turn " << m_turnCount << "]" // 도전 3. 전투 로그 카운터
+    std::cout << "[Turn " << m_turnCount << "] " // 도전 3. 전투 로그 카운터
         << attacker->GetName()
         << " attacks "
         << target->GetName()
@@ -90,23 +93,17 @@ BattleResult BattleSystem::Attack(const std::string& attackerName, const std::st
 
     m_turnCount++;
 
-    std::random_device rd;
-
-    std::mt19937 gen(rd());
-
-    std::uniform_int_distribution<int> dis(0, 4);
+    bool isCritical = m_criticalRoll(m_randomEngine) < 20;
 
     if (dis(gen) == 0) // 20% 확률.
     {
-        target->TakeDamage(attacker->GetAttackPower()*2); // 도전 2. 크리티컬이면 두배.
         std::cout << "Critical hit!\n";
+        target->TakeDamage(attacker->GetAttackPower()*2); // 도전 2. 크리티컬이면 두배.
     }
     else
     {
         target->TakeDamage(attacker->GetAttackPower());
     }
-        
-    target->SetState(CharacterState::Hit); // 도전 1. 데미지 들어간게 확인되면 맞았다 판정.
 
     attacker->SetState(CharacterState::Idle);
 

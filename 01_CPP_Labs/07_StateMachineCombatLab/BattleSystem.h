@@ -3,6 +3,7 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <random>
 
 #include "Character.h"
 #include "CombatTypes.h"
@@ -30,5 +31,7 @@ public:
 
 private:
     std::vector<std::unique_ptr<Character>> m_characters;
-    int m_turnCount = 0;
+    int m_turnCount;
+    std::mt19937 m_randomEngine;
+    std::uniform_int_distribution<int> m_criticalRoll;
 };

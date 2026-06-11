@@ -13,6 +13,9 @@ std::string ToString(CharacterState state)
     case CharacterState::Dead:
         return "Dead";
 
+    case CharacterState::Hit:
+        return "Hit";
+
     default:
         return "Unknown";
     }

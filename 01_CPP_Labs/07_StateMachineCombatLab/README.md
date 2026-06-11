@@ -38,3 +38,18 @@ state transition
 BattleSystem
 vector<unique_ptr<T>>
 non-owning raw pointer
+
+## Features
+
+- CharacterState: Idle, Attacking, Hit, Dead
+- BattleResult: Hit, TargetDead, InvalidAttacker, InvalidTarget
+- 캐릭터 추가
+- 캐릭터 출력
+- 공격
+- 회복
+- 죽은 캐릭터 행동 방지
+- 생존 캐릭터 출력
+- 전투 종료 판정
+- 20% 치명타
+- 전투 턴 카운터
+- 자동 전투 1턴
