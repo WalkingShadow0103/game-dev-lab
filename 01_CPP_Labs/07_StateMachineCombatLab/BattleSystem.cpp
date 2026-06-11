@@ -5,7 +5,7 @@
 
 BattleSystem::BattleSystem()
     : m_characters()
-    , m_turnCount(0)
+    , m_turnCount(1)
     , m_randomEngine(std::random_device{}())
     , m_criticalRoll(0,99)
 {
@@ -95,7 +95,7 @@ BattleResult BattleSystem::Attack(const std::string& attackerName, const std::st
 
     bool isCritical = m_criticalRoll(m_randomEngine) < 20;
 
-    if (dis(gen) == 0) // 20% 확률.
+    if (isCritical) // 20% 확률.
     {
         std::cout << "Critical hit!\n";
         target->TakeDamage(attacker->GetAttackPower()*2); // 도전 2. 크리티컬이면 두배.
